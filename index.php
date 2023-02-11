@@ -1,4 +1,8 @@
-<h1><?php
-    echo ("Hello World!");
+<?php
+include_once('./database/connection/connect.php');
 
-    ?></h1>
+if (!isset($_SESSION['userId'])) {
+    header('Location:login.php');
+} else {
+    echo 'Eai';
+}
