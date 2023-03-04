@@ -1,25 +1,25 @@
 <?php
 class Conta
 {
-    private string $numero;
-    private string $banco;
-    private string $agencia;
-    private float $saldo;
+    protected string $numero;
+    protected string $banco;
+    protected string $agencia;
+    protected float $saldo;
 
     function __construct(
         string $numero,
         string $banco,
         string $agencia,
         float $saldo
-    )
-    {
+    ) {
+
         $this->setAgencia($agencia);
         $this->setBanco($banco);
         $this->setNumero($numero);
         $this->setSaldo($saldo);
     }
 
-    private function setNumero(string $numero)
+    protected function setNumero(string $numero)
     {
         if (gettype($numero) == 'string') {
             $this->numero = $numero;
@@ -29,7 +29,7 @@ class Conta
         }
     }
 
-    private function setBanco(string $banco)
+    protected function setBanco(string $banco)
     {
         if (gettype($banco) == 'string') {
             $this->banco = $banco;
@@ -39,7 +39,7 @@ class Conta
         }
     }
 
-    private function setAgencia(string $agencia)
+    protected function setAgencia(string $agencia)
     {
         if (gettype($agencia) == 'string') {
             $this->agencia = $agencia;
@@ -49,7 +49,7 @@ class Conta
         }
     }
 
-    private function setSaldo(float $saldo)
+    protected function setSaldo(float $saldo)
     {
         if (gettype($saldo) == 'double') {
             $this->saldo = $saldo;
@@ -59,46 +59,91 @@ class Conta
         }
     }
 
+    protected function formatValue(float $value)
+    {
+        return number_format($value, 2, ',', '.');
+    }
+
     public function getDetails()
     {
-        $saldoFormat = number_format($this->saldo, 2, ',', '.');
-        return "Banco: {$this->banco}
-        <br>
-        Agencia: {$this->agencia}
-        <br>
-        Numero: {$this->numero}
-        <br>
-        Saldo: R$ {$saldoFormat}";
+        return "Banco: {$this->banco} | Agencia: {$this->agencia} | Numero: {$this->numero} | Saldo: R$ {$this->formatValue($this->saldo)}";
     }
 
     public function depositar(float $valor)
     {
-        $formatValue = number_format($valor, 2, ',', '.');
         $this->saldo += $valor;
-        echo "Deposito de R$ {$formatValue} realizado";
-        $formatSaldo = number_format($this->saldo, 2, ',', '.');
-        echo "<br>Novo saldo R$ {$formatSaldo}";
+        echo "Deposito de R$ {$this->formatValue($valor)} realizado";
+        echo "<br>Novo saldo R$ {$this->formatValue($this->saldo)}";
     }
 
     public function sacar(float $valor)
     {
         if ($valor < $this->saldo) {
-            $formatValue = number_format($valor, 2, ',', '.');
-            echo "Saque de R$ {$formatValue} realizado";
+            echo "Saque de R$ {$this->formatValue($valor)} realizado";
             $this->saldo -= $valor;
-            $formatSaldo = number_format($this->saldo, 2, ',', '.');
-            echo "<br>Novo saldo R$ {$formatSaldo}";
+            echo "<br>Novo saldo R$ {$this->formatValue($this->saldo)}";
         } else {
             echo "Saque não aceito! Saldo insuficiente!";
         }
     }
 }
 
-$c1 = new Conta('1234 748', 'Caixa', '12345-c', 500.00);
+class ContaCorrente extends Conta
+{
+    private float $limite;
+
+    function __construct(
+        string $numero,
+        string $banco,
+        string $agencia,
+        float $saldo,
+        float $limite
+    ) {
+        parent::__construct($numero, $banco, $agencia, $saldo);
+        $this->limite = $limite;
+    }
+
+    public function getDetailsCC()
+    {
+        return "Banco: {$this->banco} | Agencia: {$this->agencia} | Numero: {$this->numero} | Saldo: R$ {$this->formatValue($this->saldo)} | limite: R$ {$this->formatValue($this->limite)}";
+    }
+}
+
+class ContaPoupanca extends Conta
+{
+    private float $taxa;
+
+    function __construct(
+        string $numero,
+        string $banco,
+        string $agencia,
+        float $saldo,
+        float $taxa
+    ) {
+        parent::__construct($numero, $banco, $agencia, $saldo);
+        $this->taxa = $taxa;
+    }
+
+    public function getDetailsCP()
+    {
+        return "Banco: {$this->banco} | Agencia: {$this->agencia} | Numero: {$this->numero} | Saldo: R$ {$this->formatValue($this->saldo)} | Taxa: {$this->taxa} %";
+    }
+}
+
+$c1 = new Conta('123123', 'Caixa', '123', 500.00);
+$c2 = new ContaCorrente('123123', 'Caixa', '123', 500.00, 400.00);
+$c3 = new ContaPoupanca('123123', 'Caixa', '123', 500.00, 1.0);
+echo 'Conta';
+echo '<br>';
+echo '<br>';
 echo $c1->getDetails();
-echo "<br>";
-$c1->depositar(500.00);
-echo "<br>";
-$c1->sacar(900.00);
-echo "<br>";
-$c1->sacar(150.00);
+echo "<hr>";
+echo 'Conta corrente';
+echo '<br>';
+echo '<br>';
+print_r($c2->getDetailsCC());
+echo "<hr>";
+echo 'Conta poupança';
+echo '<br>';
+echo '<br>';
+print_r($c3->getDetailsCP());
