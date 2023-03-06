@@ -1,8 +1,12 @@
 <?php
-
 // Implemente através do mecanismo de herança, um cadastro de pessoas 
 // em uma faculdade, em uma faculdade podemos ter três tipos 
-// de pessoas: professor, funcionário e aluno. Os professores e os funcionários devem possuir um método 
+// de pessoas: professor, funcionário e aluno. O cadastro de professores 
+// deve armazenar as informações de cpf, nome, email, matricula, carga horario, 
+// salario e departamento. O cadastro de funcionarios deve armazenar as 
+// informações de nome, cpf, email, matricula, regime, salario. O cadastro de 
+// alunos deve armazenar as informações de nome, cpf, email, ra, curso e termo 
+// que se encontra. Os professores e os funcionários devem possuir um método 
 // que atualiza seus salários e os alunos um método que altere o seu termo. 
 // Deve existir também um método para retornar os dados da pessoa, retornando 
 // um objeto com as informações nome, cpf e email.
@@ -11,233 +15,236 @@
 abstract class Pessoa
 {
     protected string $cpf;
-    protected string $email;
     protected string $nome;
+    protected string $email;
 
-    function __construct(string $cpf, string $email, string $nome)
+    public function setCpf(string $cpf): void
     {
-        $this->setCpf($cpf);
-        $this->setEmail($email);
-        $this->setNome($nome);
-    }
-
-    private function setCpf(string $cpf)
-    {
-        if (gettype($cpf) == "string") {
+        if (preg_match('/^\d{3}\.\d{3}\.\d{3}-\d{2}$/', $cpf)) {
             $this->cpf = $cpf;
         } else {
-            print_r("Valor inserido no CPF está incorreto");
-            return;
+            echo "CPF inválido!";
         }
     }
 
-    private function setEmail(string $email)
+    public function setNome(string $nome): void
     {
-        if (gettype($email) == "string") {
+        $this->nome = $nome;
+    }
+
+    public function setEmail(string $email): void
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->email = $email;
         } else {
-            print_r("Valor inserido no email está incorreto");
-            return;
+            echo "E-mail inválido!";
         }
     }
 
-    private function setNome(string $nome)
+    public function getDados(): string
     {
-        if (gettype($nome) == "string") {
-            $this->nome = $nome;
-        } else {
-            print_r("Valor inserido no nome está incorreto");
-            return;
-        }
-    }
-
-    public function getDetalhes(): string
-    {
-        return "Nome: {$this->nome} | Email: {$this->email} | CPF: {$this->cpf}";
+        return "CPF: $this->cpf | Nome: $this->nome | Email: $this->email";
     }
 }
 
-
-/* O cadastro de professores 
-deve armazenar as informações de cpf, nome, email, matricula, carga horario, 
-salario e departamento. */
-final class Professor extends Pessoa
-{
-    private string $matricula;
-    private int $carga_horaria;
-    private float $salario;
-    private string $departamento;
-
-    function __construct(
-        string $cpf,
-        string $email,
-        string $nome,
-        string $matricula,
-        int $carga_horaria,
-        float $salario,
-        string $departamento
-    )
-    {
-        parent::__construct($cpf, $email, $nome);
-        $this->setCargaHoraria($carga_horaria);
-        $this->setMatricula($matricula);
-        $this->setSalario($salario);
-        $this->setDepartamento($departamento);
-    }
-
-    private function setMatricula(string $matricula)
-    {
-        if (gettype($matricula) == "string") {
-            $this->matricula = $matricula;
-        } else {
-            echo "Valor digitado para a matricula é inválido!";
-        }
-    }
-    private function setCargaHoraria(int $carga_horaria)
-    {
-        if (gettype($carga_horaria) == "int") {
-            $this->carga_horaria = $carga_horaria;
-        } else {
-            echo "Valor digitado para a carga horária é inválido!";
-        }
-    }
-
-    private function setSalario(float $salario)
-    {
-        if (gettype($salario) == "double") {
-            $this->salario = $salario;
-        } else {
-            echo "Valor digitado para o salário é inválido!";
-        }
-    }
-
-    private function setDepartamento(string $departamento)
-    {
-        if (gettype($departamento) == "string") {
-            $this->departamento = $departamento;
-        } else {
-            echo "Valor digitado para o departamento é inválido!";
-        }
-    }
-
-    public function atualizaSalario(float $indice): bool
-    {
-        $this->salario += $this->salario * $indice / 100;
-
-        return true;
-    }
-}
-
-/*
-O cadastro de funcionarios deve armazenar as informações de nome, cpf, email, matricula, regime, salario.
-*/
-
-final class Funcionario extends Pessoa
-{
-    private string $matricula;
-    private string $regime;
-    private float $salario;
-
-    function __construct(
-        string $cpf,
-        string $email,
-        string $nome,
-        string $matricula,
-        string $regime,
-        float $salario
-    )
-    {
-        parent::__construct($cpf, $email, $nome);
-        $this->setMatricula($matricula);
-        $this->setRegime($regime);
-        $this->setSalario($salario);
-
-    }
-
-    private function setMatricula(string $matricula): void
-    {
-        if (gettype($matricula) == "string") {
-            $this->matricula = $matricula;
-        } else {
-            echo "Valor digitado para a matricula é inválido!";
-        }
-    }
-
-    private function setSalario(float $salario): void
-    {
-        if (gettype($salario) == "double") {
-            $this->salario = $salario;
-        } else {
-            echo "Valor digitado para o salario é inválido!";
-        }
-    }
-
-    private function setRegime(string $regime): void
-    {
-        if (gettype($regime) == "string") {
-            $this->regime = $regime;
-        } else {
-            echo "Valor digitado para o regime é inválido!";
-        }
-    }
-
-    public function atualizaSalario(float $indice): bool
-    {
-        $this->salario += $this->salario * $indice / 100;
-
-        return true;
-    }
-}
-
-/* O cadastro de 
-alunos deve armazenar as informações de nome, cpf, email, ra, curso e termo 
-que se encontra */
-
-final class Aluno extends Pessoa
+class Aluno extends Pessoa
 {
     private string $ra;
     private string $curso;
     private int $termo;
 
-    function __construct(
-        string $cpf,
-        string $email,
-        string $nome,
-        string $ra,
-        string $curso,
-        int $termo
-    )
+    public function setRa(string $ra): void
     {
-        parent::__construct($cpf, $email, $nome);
-        $this->setCurso($curso);
-        $this->setTermo($termo);
-        $this->setRa($ra);
-    }
-
-    private function setRa(string $ra): void
-    {
-        if (gettype($ra) == "string") {
+        if (is_string($ra)) {
             $this->ra = $ra;
         } else {
-            echo "Valor digitado para o R.A é inválido";
+            echo "RA deve ser uma string";
         }
     }
 
-    private function setCurso(string $curso): void
+    public function setCurso(string $curso): void
     {
-        if (gettype($curso) == "string") {
+        if (is_string($curso)) {
             $this->curso = $curso;
         } else {
-            echo "Valor digitado para o curso é inválido";
+            echo "Curso deve ser uma string";
         }
     }
 
-    private function setTermo(int $termo): void
+    public function setTermo(int $termo): void
     {
-        if (gettype($termo) == "string") {
+        if (is_int($termo)) {
             $this->termo = $termo;
         } else {
-            echo "Valor digitado para o termo é inválido";
+            echo "Termo deve ser um inteiro";
         }
     }
+
+    public function alterarTermo(int $novoTermo): void
+    {
+        $this->termo = $novoTermo;
+    }
+
+    public function getDados(): string
+    {
+        return parent::getDados() . " | RA: $this->ra | Curso: $this->curso | Termo: $this->termo º";
+    }
 }
+
+
+class Professor extends Pessoa
+{
+    private string $matricula;
+    private int $cargaHoraria;
+    private float $salario;
+    private string $departamento;
+
+    public function setMatricula(string $matricula): string
+    {
+        if (is_string($matricula)) {
+            $this->matricula = $matricula;
+            return "";
+        } else {
+            return "Matricula deve ser uma string";
+        }
+    }
+
+    public function setCargaHoraria(int $cargaHoraria): string
+    {
+        if (is_int($cargaHoraria)) {
+            $this->cargaHoraria = $cargaHoraria;
+            return "";
+        } else {
+            return "Carga horária deve ser um inteiro";
+        }
+    }
+
+    public function setSalario(float $salario): string
+    {
+        if (is_numeric($salario)) {
+            $this->salario = $salario;
+            return "";
+        } else {
+            return "Salario deve ser um numero";
+        }
+    }
+
+    public function setDepartamento(string $departamento): string
+    {
+        if (is_string($departamento)) {
+            $this->departamento = $departamento;
+            return "";
+        } else {
+            return "Departamento deve ser uma string";
+        }
+    }
+
+    public function atualizarSalario(float $aumentoPercentual): void
+    {
+        $this->salario *= (1 + $aumentoPercentual / 100);
+    }
+
+    public function getDados(): string
+    {
+        return parent::getDados() . " | Matricula: $this->matricula | Carga Horária: $this->cargaHoraria | Salário: R$ " . number_format($this->salario, 2, ',', '.') . " | Departamento: $this->departamento";
+    }
+}
+
+class Funcionario extends Pessoa
+{
+    protected string $matricula;
+    protected string $regime;
+    protected float $salario;
+
+    public function setMatricula(string $matricula): string
+    {
+        if (is_string($matricula)) {
+            $this->matricula = $matricula;
+            return "";
+        } else {
+            return "Matricula deve ser uma string";
+        }
+    }
+
+    public function setRegime(string $regime): string
+    {
+        if (is_string($regime)) {
+            $this->regime = $regime;
+            return "";
+        } else {
+            return "Regime deve ser uma string";
+        }
+    }
+
+    public function setSalario(float $salario): string
+    {
+        if (is_numeric($salario)) {
+            $this->salario = $salario;
+            return "";
+        } else {
+            return "Salario deve ser um numero";
+        }
+    }
+
+    public function atualizarSalario(float $porcentagem): void
+    {
+        $aumento = $this->salario * $porcentagem / 100;
+        $this->salario += $aumento;
+    }
+
+    public function getDados(): string
+    {
+        return parent::getDados() . " | Matricula: $this->matricula | Regime: $this->regime | Salario: R$ " . number_format($this->salario, 2, ',', '.');
+    }
+
+    public function __toString(): string
+    {
+        return $this->nome;
+    }
+}
+
+
+$professor = new Professor();
+$professor->setCpf('111.111.111-11');
+$professor->setNome('Professor 1');
+$professor->setEmail('professor1@teste.com');
+$professor->setMatricula('0001');
+$professor->setCargaHoraria(40);
+$professor->setSalario(4000);
+$professor->setDepartamento('Departamento 1');
+
+$funcionario = new Funcionario();
+$funcionario->setCpf('222.222.222-22');
+$funcionario->setNome('Funcionario 1');
+$funcionario->setEmail('funcionario1@teste.com');
+$funcionario->setMatricula('0002');
+$funcionario->setRegime('Integral');
+$funcionario->setSalario(2000);
+
+$aluno = new Aluno();
+$aluno->setCpf('333.333.333-33');
+$aluno->setNome('Aluno 1');
+$aluno->setEmail('aluno1@teste.com');
+$aluno->setRa('123456');
+$aluno->setCurso('Curso 1');
+$aluno->setTermo(3);
+
+echo "<h2>Professor - antes do aumento</h2>";
+echo $professor->getDados() . "<hr>";
+$professor->atualizarSalario(10);
+echo "<h2>Professor - depois do aumento</h2>";
+echo $professor->getDados() . "<hr>";
+
+
+echo "<h2>Funcionario - antes do aumento</h2>";
+echo $funcionario->getDados() . "<hr>";
+$funcionario->atualizarSalario(5);
+echo "<h2>Funcionario - depois do aumento</h2>";
+echo $funcionario->getDados() . "<hr>";
+
+
+echo "<h2>Aluno - antes de alterar o termo</h2>";
+echo $aluno->getDados() . "<hr>";
+$aluno->setTermo(4);
+echo "<h2>Aluno - depois de alterar o termo</h2>";
+echo $aluno->getDados() . "<hr>";
