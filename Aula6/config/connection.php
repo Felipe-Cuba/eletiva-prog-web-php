@@ -10,4 +10,4 @@ try {
     echo "Erro na conexão: " . $e->getMessage();
 }
 
-$conn = null;
+// $conn = null;
