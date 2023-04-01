@@ -1,20 +1,11 @@
-<?php
-$TITLE = 'TESTE';
-
-$APP_HOST = 'TESTE';
-?>
-<footer class="footer">
-  <div class="container">
-    <p class="text-muted">
-      Rodapé :)
-    </p>
-  </div>
+<p> </p>
+<footer class="text-center text-white" style="background-color: slategrey">
+  <p> </p>
+  <p><a class="text-white" href="#">Back to top</a></p>
+  <p>Copyright © FATEC Presidente Prudente <?= date('Y'); ?> · <a class="text-white" href="#">Privacidade de Dados</a> · <a class="text-white" href="#">Termos de Uso</a></p>
+  <p> </p>
 </footer>
-
-<script src="http://<?php echo $APP_HOST; ?>/public/js/jquery-3.2.1.min.js"></script>
-<script src="http://<?php echo $APP_HOST; ?>/public/js/jquery.validate.min.js" type="text/javascript"></script>
-<script src="http://<?php echo $APP_HOST; ?>/public/js/validacao.js" type="text/javascript"></script>
-<script src="http://<?php echo $APP_HOST; ?>/public/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
 </body>
 
 </html>

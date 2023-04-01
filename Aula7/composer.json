@@ -3,7 +3,7 @@
   "description": "MVC-Exemplo",
   "autoload": {
     "psr-4": {
-      "Felip\\Aula7\\": "App/"
+      "App\\": "App"
     }
   },
   "authors": [
