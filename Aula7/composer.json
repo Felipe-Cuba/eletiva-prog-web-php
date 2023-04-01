@@ -1,0 +1,16 @@
+{
+  "name": "felip/aula7",
+  "description": "MVC-Exemplo",
+  "autoload": {
+    "psr-4": {
+      "Felip\\Aula7\\": "App/"
+    }
+  },
+  "authors": [
+    {
+      "name": "FelipeCuba",
+      "email": "49664146+Felipe-Cuba@users.noreply.github.com"
+    }
+  ],
+  "require": {}
+}
